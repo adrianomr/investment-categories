@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 
+	"adrianorodrigues.com.br/investment-categories/framework/internal/database/dto"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	_ "github.com/lib/pq"
@@ -57,8 +58,9 @@ func (d *Database) Connect() (*gorm.DB, error) {
 	}
 
 	if d.AutoMigrateDb {
-		// d.Db.AutoMigrate(&domain.Video{}, &domain.Job{})
-		// d.Db.Model(domain.Job{}).AddForeignKey("video_id", "videos (id)", "CASCADE", "CASCADE")
+		d.Db.AutoMigrate(&dto.CategoryDto{}, &dto.Investment{})
+		d.Db.Model(dto.CategoryDto{}).AddForeignKey("category_id", "category (id)", "NOTHING", "NOTHING")
+		d.Db.Model(dto.Investment{}).AddForeignKey("category_id", "category (id)", "NOTHING", "NOTHING")
 	}
 
 	return d.Db, nil
