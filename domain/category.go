@@ -6,5 +6,5 @@ type Category struct {
 	Grade         float32
 	CurrentAmount float32
 	TargetAmount  float32
-	Categorie     *Category
+	Category      *Category
 }
