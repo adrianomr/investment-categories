@@ -23,7 +23,8 @@ func CategoriesControllerSingleton() *CategoriesControllerImpl {
 }
 
 func (rest *CategoriesControllerImpl) GetCategory(w http.ResponseWriter, r *http.Request) {
-	sendResponse(w, dto.BuildResponse(domain.Category{}, nil))
+	listCategories, err := rest.controller.FindAllCategories()
+	sendResponse(w, dto.BuildResponse(listCategories, err))
 }
 
 func (rest *CategoriesControllerImpl) PostCategory(w http.ResponseWriter, r *http.Request) {
