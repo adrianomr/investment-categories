@@ -2,7 +2,6 @@ package rest
 
 import (
 	"adrianorodrigues.com.br/investment-categories/adapters/controller"
-	"adrianorodrigues.com.br/investment-categories/domain"
 	"adrianorodrigues.com.br/investment-categories/framework/external/rest/dto"
 	"net/http"
 )
@@ -28,7 +27,7 @@ func (rest *CategoriesControllerImpl) GetCategory(w http.ResponseWriter, r *http
 }
 
 func (rest *CategoriesControllerImpl) PostCategory(w http.ResponseWriter, r *http.Request) {
-	var category *domain.Category
+	var category *dto.CategoryDto
 	var err error
 	readRequest(r, &category)
 	category, err = rest.controller.CreateCategory(category)

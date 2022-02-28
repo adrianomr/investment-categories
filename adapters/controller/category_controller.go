@@ -1,12 +1,11 @@
 package controller
 
 import (
-	"adrianorodrigues.com.br/investment-categories/domain"
 	"adrianorodrigues.com.br/investment-categories/framework/external/rest/dto"
 )
 
 type CategoryController interface {
-	CreateCategory(category *domain.Category) (*domain.Category, error)
+	CreateCategory(category *dto.CategoryDto) (*dto.CategoryDto, error)
 	FindAllCategories() (*[]dto.CategoryDto, error)
 }
 
@@ -18,7 +17,7 @@ func NewCategoryController() *CategoryControllerImpl {
 	return &CategoryControllerImpl{}
 }
 
-func (controller *CategoryControllerImpl) CreateCategory(category *domain.Category) (*domain.Category, error) {
+func (controller *CategoryControllerImpl) CreateCategory(category *dto.CategoryDto) (*dto.CategoryDto, error) {
 	return category, nil
 }
 
