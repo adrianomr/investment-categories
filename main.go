@@ -1,6 +1,6 @@
 package main
 
-import "adrianorodrigues.com.br/investment-categories/framework/external/rest"
+import "adrianorodrigues.com.br/investment-categories/framework/entrypoint/rest"
 
 // função principal
 func main() {

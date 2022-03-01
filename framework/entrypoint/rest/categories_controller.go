@@ -2,7 +2,7 @@ package rest
 
 import (
 	"adrianorodrigues.com.br/investment-categories/adapters/controller"
-	"adrianorodrigues.com.br/investment-categories/framework/external/rest/dto"
+	"adrianorodrigues.com.br/investment-categories/framework/entrypoint/rest/dto"
 	"net/http"
 )
 

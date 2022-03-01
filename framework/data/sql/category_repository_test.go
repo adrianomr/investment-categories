@@ -1,12 +1,11 @@
-package database_test
+package sql_test
 
 import (
 	"github.com/jinzhu/gorm"
 	"log"
 	"testing"
 
-	"adrianorodrigues.com.br/investment-categories/framework/internal/database"
-	"adrianorodrigues.com.br/investment-categories/framework/internal/database/dto"
+	"adrianorodrigues.com.br/investment-categories/framework/data/sql/dto"
 	"github.com/stretchr/testify/require"
 )
 
@@ -29,9 +28,9 @@ var category2 = &dto.CategoryDto{
 	Category:      category,
 }
 
-func setUp(db *gorm.DB) *database.CategoryRepositoryImpl {
+func setUp(db *gorm.DB) gorm.CategoryRepository {
 
-	repository := database.NewCategoryRepository(db)
+	repository := gorm.NewCategoryRepository(db)
 
 	_, err := repository.Save(category)
 	if err != nil {
@@ -46,7 +45,7 @@ func setUp(db *gorm.DB) *database.CategoryRepositoryImpl {
 }
 
 func TestCategoryRepoShouldSaveCategory(t *testing.T) {
-	db := database.NewDbTest()
+	db := gorm.NewDbTest()
 	defer db.Close()
 	repository := setUp(db)
 
@@ -59,7 +58,7 @@ func TestCategoryRepoShouldSaveCategory(t *testing.T) {
 
 func TestCategoryRepoShouldSaveSubCategory(t *testing.T) {
 
-	db := database.NewDbTest()
+	db := gorm.NewDbTest()
 	defer db.Close()
 	repository := setUp(db)
 
@@ -68,4 +67,19 @@ func TestCategoryRepoShouldSaveSubCategory(t *testing.T) {
 	log.Printf("Category %v", response)
 	require.Nil(t, err)
 	require.Equal(t, category, response.Category)
+}
+
+func TestCategoryRepoShouldFindAllForUser1(t *testing.T) {
+
+	db := gorm.NewDbTest()
+	defer db.Close()
+	repository := setUp(db)
+
+	response, err := repository.FindAllCategoriesByUserId(1)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Category %v", response)
+	require.Equal(t, 2, len(*response))
 }

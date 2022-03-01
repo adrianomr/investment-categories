@@ -1,8 +1,9 @@
 package integration_test
 
 import (
-	"adrianorodrigues.com.br/investment-categories/framework/external/rest"
-	"adrianorodrigues.com.br/investment-categories/framework/external/rest/dto"
+	"adrianorodrigues.com.br/investment-categories/framework/entrypoint/rest"
+	"adrianorodrigues.com.br/investment-categories/framework/entrypoint/rest/dto"
+	integration "adrianorodrigues.com.br/investment-categories/integration_test"
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"log"
@@ -11,6 +12,8 @@ import (
 )
 
 func TestGetCategories(t *testing.T) {
+	integration.NewPrepareForTests().Prepare()
+
 	req, _ := http.NewRequest("GET", "/categories", nil)
 	response := rest.HttpServerSingleton().InitTest(req)
 
@@ -21,7 +24,7 @@ func TestGetCategories(t *testing.T) {
 	responseBody := dto.ResponseDto{
 		Data: &categories,
 	}
-	categoriesExpected := &[]dto.CategoryDto{dto.CategoryDto{}, dto.CategoryDto{}}
+	categoriesExpected := &[]dto.CategoryDto{*integration.CategoryRest, *integration.CategoryRest2}
 	log.Default().Printf(response.Body.String())
 	json.Unmarshal(response.Body.Bytes(), &responseBody)
 	log.Default().Printf(responseBody.Timestamp.String())

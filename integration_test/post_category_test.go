@@ -1,8 +1,8 @@
 package integration_test
 
 import (
-	"adrianorodrigues.com.br/investment-categories/framework/external/rest"
-	"adrianorodrigues.com.br/investment-categories/framework/external/rest/dto"
+	"adrianorodrigues.com.br/investment-categories/framework/entrypoint/rest"
+	"adrianorodrigues.com.br/investment-categories/framework/entrypoint/rest/dto"
 	"bytes"
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
@@ -12,18 +12,22 @@ import (
 )
 
 func TestPostCategories(t *testing.T) {
-	req, _ := http.NewRequest("POST", "/categories", bytes.NewBufferString(`{"id":"","name":"","grade":0,"currentAmount":0,"TargetAmount":0,"category":null}`))
+	req, _ := http.NewRequest("POST", "/categories", bytes.NewBufferString(`{"name":"Test","grade":10,"currentAmount":5,"TargetAmount":15}`))
 	response := rest.HttpServerSingleton().InitTest(req)
 
 	log.Default().Printf("Reponse: %v", response)
 	assert.Equal(t, 200, response.Code)
-
+	category := &dto.CategoryDto{}
 	responseBody := dto.ResponseDto{
-		Data: &dto.CategoryDto{},
+		Data: category,
 	}
-	categoryExpected := &dto.CategoryDto{}
-	log.Default().Printf(response.Body.String())
+	categoryExpected := &dto.CategoryDto{
+		Name:          "Test",
+		Grade:         10,
+		CurrentAmount: 5,
+		TargetAmount:  15,
+	}
 	json.Unmarshal(response.Body.Bytes(), &responseBody)
-	log.Default().Printf(responseBody.Timestamp.String())
+	categoryExpected.ID = category.ID
 	assert.Equal(t, categoryExpected, responseBody.Data)
 }

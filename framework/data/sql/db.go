@@ -1,15 +1,20 @@
-package database
+package sql
 
 import (
 	"log"
 
-	"adrianorodrigues.com.br/investment-categories/framework/internal/database/dto"
+	"adrianorodrigues.com.br/investment-categories/framework/data/sql/dto"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	_ "github.com/lib/pq"
 )
 
-type Database struct {
+type Database interface {
+	Init()
+	connect() (*gorm.DB, error)
+	GetDb() *gorm.DB
+}
+type DatabaseImpl struct {
 	Db            *gorm.DB
 	Dsn           string
 	DsnTest       string
@@ -20,28 +25,50 @@ type Database struct {
 	Env           string
 }
 
-func NewDb() *Database {
-	return &Database{}
+var database Database
+
+func DatabaseSingleton() Database {
+	if database == nil {
+		database = newDbTest()
+	}
+	return database
 }
 
-func NewDbTest() *gorm.DB {
-	dbInstance := NewDb()
-	dbInstance.Env = "test"
-	dbInstance.DbTypeTest = "sqlite3"
-	dbInstance.DsnTest = ":memory:"
-	dbInstance.AutoMigrateDb = true
-	dbInstance.Debug = true
+func (d DatabaseImpl) Init() {
+	if database == nil {
+		database = newDbTest()
+	}
+}
 
-	connection, err := dbInstance.Connect()
+func (d DatabaseImpl) GetDb() *gorm.DB {
+	return d.Db
+}
+
+func newDb() Database {
+	return &DatabaseImpl{}
+}
+
+func newDbTest() *DatabaseImpl {
+	dbInstance := &DatabaseImpl{
+		DsnTest:       ":memory:",
+		DbTypeTest:    "sqlite3",
+		Debug:         true,
+		AutoMigrateDb: true,
+		Env:           "test",
+	}
+
+	connection, err := dbInstance.connect()
 
 	if err != nil {
 		log.Fatalf("Test db error: %v", err)
 	}
 
-	return connection
+	dbInstance.Db = connection
+
+	return dbInstance
 }
 
-func (d *Database) Connect() (*gorm.DB, error) {
+func (d *DatabaseImpl) connect() (*gorm.DB, error) {
 	var err error
 	if d.Env != "test" {
 		d.Db, err = gorm.Open(d.DbType, d.Dsn)

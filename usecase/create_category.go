@@ -6,21 +6,21 @@ import (
 )
 
 type CreateCategorieUseCase interface {
-	createCategorie(category *domain.Category) (*domain.Category, error)
+	Execute(category *domain.Category) (*domain.Category, error)
 }
 
 type CreateCategorieUseCaseImpl struct {
 	gateway gateway.CategoryGateway
 }
 
-func NewService() *CreateCategorieUseCaseImpl {
+func NewCreateCategory() *CreateCategorieUseCaseImpl {
 
 	return &CreateCategorieUseCaseImpl{
 		gateway: gateway.NewCategoryGateway(),
 	}
 }
 
-func (useCase *CreateCategorieUseCaseImpl) createCategorie(category *domain.Category) (*domain.Category, error) {
+func (useCase *CreateCategorieUseCaseImpl) Execute(category *domain.Category) (*domain.Category, error) {
 
 	response, err := useCase.gateway.CreateCategory(category)
 

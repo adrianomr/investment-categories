@@ -6,8 +6,8 @@ type CategoryDto struct {
 	Grade         float32
 	CurrentAmount float32
 	TargetAmount  float32
-	UserId        int32
+	UserId        int
 	CategoryId    string
-	Category      *CategoryDto  `gorm:"ForeignKey:CategoryId"`
-	Investments   *[]Investment `gorm:"ForeignKey:CategoryId"`
+	Category      *CategoryDto  `sql:"ForeignKey:CategoryId"`
+	Investments   *[]Investment `sql:"ForeignKey:CategoryId"`
 }

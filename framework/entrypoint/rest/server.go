@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"adrianorodrigues.com.br/investment-categories/framework/external/rest/dto"
+	"adrianorodrigues.com.br/investment-categories/framework/entrypoint/rest/dto"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"log"

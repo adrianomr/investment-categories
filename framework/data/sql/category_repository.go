@@ -1,20 +1,24 @@
-package database
+package sql
 
 import (
 	"fmt"
 
-	"adrianorodrigues.com.br/investment-categories/framework/internal/database/dto"
+	"adrianorodrigues.com.br/investment-categories/framework/data/sql/dto"
 	"github.com/jinzhu/gorm"
 )
 
 type CategoryRepository interface {
 	Save(category *dto.CategoryDto) (*dto.CategoryDto, error)
-
 	Find(id string) (*dto.CategoryDto, error)
+	FindAllCategoriesByUserId(userId int) (*[]dto.CategoryDto, error)
 }
 
 type CategoryRepositoryImpl struct {
 	Db *gorm.DB
+}
+
+func NewCategoryRepository() CategoryRepository {
+	return &CategoryRepositoryImpl{Db: DatabaseSingleton().GetDb()}
 }
 
 func (repo *CategoryRepositoryImpl) Save(category *dto.CategoryDto) (*dto.CategoryDto, error) {
@@ -38,6 +42,8 @@ func (repo *CategoryRepositoryImpl) Find(id string) (*dto.CategoryDto, error) {
 	return &category, nil
 }
 
-func NewCategoryRepository(db *gorm.DB) *CategoryRepositoryImpl {
-	return &CategoryRepositoryImpl{Db: db}
+func (repo *CategoryRepositoryImpl) FindAllCategoriesByUserId(userId int) (*[]dto.CategoryDto, error) {
+	var categories []dto.CategoryDto
+	err := repo.Db.Preload("Category").Where("user_id = ?", userId).Find(&categories).Error
+	return &categories, err
 }
