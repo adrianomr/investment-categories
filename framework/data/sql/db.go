@@ -10,7 +10,6 @@ import (
 )
 
 type Database interface {
-	Init()
 	connect() (*gorm.DB, error)
 	GetDb() *gorm.DB
 }
@@ -32,12 +31,6 @@ func DatabaseSingleton() Database {
 		database = newDbTest()
 	}
 	return database
-}
-
-func (d DatabaseImpl) Init() {
-	if database == nil {
-		database = newDbTest()
-	}
 }
 
 func (d DatabaseImpl) GetDb() *gorm.DB {

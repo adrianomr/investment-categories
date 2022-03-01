@@ -7,6 +7,7 @@ import (
 )
 
 var categoriesSingleton = &CategoriesControllerImpl{controller: controller.NewCategoryController()}
+var jwtHandler = NewJwtHandler()
 
 type CategoriesController interface {
 	GetCategory(w http.ResponseWriter, r *http.Request)
@@ -22,14 +23,24 @@ func CategoriesControllerSingleton() *CategoriesControllerImpl {
 }
 
 func (rest *CategoriesControllerImpl) GetCategory(w http.ResponseWriter, r *http.Request) {
-	listCategories, err := rest.controller.FindAllCategories()
+	userId, err := jwtHandler.getUser(r)
+	if err != nil {
+		sendResponse(w, dto.BuildResponseForbidden(err))
+		return
+	}
+	listCategories, err := rest.controller.FindAllCategories(userId)
 	sendResponse(w, dto.BuildResponse(listCategories, err))
 }
 
 func (rest *CategoriesControllerImpl) PostCategory(w http.ResponseWriter, r *http.Request) {
 	var category *dto.CategoryDto
-	var err error
+	userId, err := jwtHandler.getUser(r)
+	if err != nil {
+		sendResponse(w, dto.BuildResponseForbidden(err))
+		return
+	}
 	readRequest(r, &category)
+	category.UserId = userId
 	category, err = rest.controller.CreateCategory(category)
 	sendResponse(w, dto.BuildResponse(category, err))
 }

@@ -8,7 +8,7 @@ import (
 
 type CategoryController interface {
 	CreateCategory(category *dto.CategoryDto) (*dto.CategoryDto, error)
-	FindAllCategories() (*[]dto.CategoryDto, error)
+	FindAllCategories(userId int) (*[]dto.CategoryDto, error)
 }
 
 type CategoryControllerImpl struct {
@@ -45,11 +45,12 @@ func (controller *CategoryControllerImpl) toDomain(categoryDto *dto.CategoryDto)
 		Grade:         categoryDto.Grade,
 		CurrentAmount: categoryDto.CurrentAmount,
 		TargetAmount:  categoryDto.TargetAmount,
+		UserId:        categoryDto.UserId,
 	}
 }
 
-func (controller *CategoryControllerImpl) FindAllCategories() (*[]dto.CategoryDto, error) {
-	categories, err := controller.findAllCategoriesByUser.Execute()
+func (controller *CategoryControllerImpl) FindAllCategories(userId int) (*[]dto.CategoryDto, error) {
+	categories, err := controller.findAllCategoriesByUser.Execute(userId)
 	if err != nil {
 		return nil, err
 	}

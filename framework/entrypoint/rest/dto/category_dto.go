@@ -7,4 +7,5 @@ type CategoryDto struct {
 	CurrentAmount float32      `json:"currentAmount"`
 	TargetAmount  float32      `json:"TargetAmount"`
 	Category      *CategoryDto `json:"category"`
+	UserId        int          `json:"-"`
 }

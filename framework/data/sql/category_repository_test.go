@@ -1,7 +1,7 @@
 package sql_test
 
 import (
-	"github.com/jinzhu/gorm"
+	"adrianorodrigues.com.br/investment-categories/framework/data/sql"
 	"log"
 	"testing"
 
@@ -27,10 +27,11 @@ var category2 = &dto.CategoryDto{
 	UserId:        1,
 	Category:      category,
 }
+var repository = setUp()
 
-func setUp(db *gorm.DB) gorm.CategoryRepository {
+func setUp() sql.CategoryRepository {
 
-	repository := gorm.NewCategoryRepository(db)
+	repository := sql.NewCategoryRepository()
 
 	_, err := repository.Save(category)
 	if err != nil {
@@ -45,10 +46,6 @@ func setUp(db *gorm.DB) gorm.CategoryRepository {
 }
 
 func TestCategoryRepoShouldSaveCategory(t *testing.T) {
-	db := gorm.NewDbTest()
-	defer db.Close()
-	repository := setUp(db)
-
 	response, err := repository.Find(category.ID)
 
 	log.Printf("Category %v", response)
@@ -57,11 +54,6 @@ func TestCategoryRepoShouldSaveCategory(t *testing.T) {
 }
 
 func TestCategoryRepoShouldSaveSubCategory(t *testing.T) {
-
-	db := gorm.NewDbTest()
-	defer db.Close()
-	repository := setUp(db)
-
 	response, err := repository.Find(category2.ID)
 
 	log.Printf("Category %v", response)
@@ -70,11 +62,6 @@ func TestCategoryRepoShouldSaveSubCategory(t *testing.T) {
 }
 
 func TestCategoryRepoShouldFindAllForUser1(t *testing.T) {
-
-	db := gorm.NewDbTest()
-	defer db.Close()
-	repository := setUp(db)
-
 	response, err := repository.FindAllCategoriesByUserId(1)
 	if err != nil {
 		log.Fatal(err)

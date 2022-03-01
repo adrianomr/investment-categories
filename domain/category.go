@@ -7,5 +7,5 @@ type Category struct {
 	CurrentAmount float32
 	TargetAmount  float32
 	Category      *Category
-	Investments   *[]Investment
+	UserId        int
 }

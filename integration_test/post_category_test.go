@@ -13,6 +13,7 @@ import (
 
 func TestPostCategories(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/categories", bytes.NewBufferString(`{"name":"Test","grade":10,"currentAmount":5,"TargetAmount":15}`))
+	req.Header.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8lSCknTnRANlJ0AVzCgO2yF838WYA7bLaAR7vAKnofo")
 	response := rest.HttpServerSingleton().InitTest(req)
 
 	log.Default().Printf("Reponse: %v", response)

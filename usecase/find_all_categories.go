@@ -6,7 +6,7 @@ import (
 )
 
 type FindAllCategoriesUseCase interface {
-	Execute() (*[]domain.Category, error)
+	Execute(int) (*[]domain.Category, error)
 }
 
 type FindAllCategoriesUseCaseImpl struct {
@@ -20,9 +20,9 @@ func NewFindAllCategoriesUseCase() *FindAllCategoriesUseCaseImpl {
 	}
 }
 
-func (useCase *FindAllCategoriesUseCaseImpl) Execute() (*[]domain.Category, error) {
+func (useCase *FindAllCategoriesUseCaseImpl) Execute(userId int) (*[]domain.Category, error) {
 
-	response, err := useCase.gateway.FindAllCategories()
+	response, err := useCase.gateway.FindAllCategories(userId)
 
 	return response, err
 }

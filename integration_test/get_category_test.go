@@ -15,6 +15,7 @@ func TestGetCategories(t *testing.T) {
 	integration.NewPrepareForTests().Prepare()
 
 	req, _ := http.NewRequest("GET", "/categories", nil)
+	req.Header.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8lSCknTnRANlJ0AVzCgO2yF838WYA7bLaAR7vAKnofo")
 	response := rest.HttpServerSingleton().InitTest(req)
 
 	log.Default().Printf("Reponse: %v", response)

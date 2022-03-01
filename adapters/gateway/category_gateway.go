@@ -8,7 +8,7 @@ import "adrianorodrigues.com.br/investment-categories/framework/data/sql"
 
 type CategoryGateway interface {
 	CreateCategory(category *domain.Category) (*domain.Category, error)
-	FindAllCategories() (*[]domain.Category, error)
+	FindAllCategories(int) (*[]domain.Category, error)
 }
 
 type CategoryGatewayImpl struct {
@@ -26,8 +26,8 @@ func (gateway *CategoryGatewayImpl) CreateCategory(category *domain.Category) (*
 	return toDomain(response), err
 }
 
-func (gateway *CategoryGatewayImpl) FindAllCategories() (*[]domain.Category, error) {
-	categoriesDtoList, err := gateway.repository.FindAllCategoriesByUserId(1)
+func (gateway *CategoryGatewayImpl) FindAllCategories(userId int) (*[]domain.Category, error) {
+	categoriesDtoList, err := gateway.repository.FindAllCategoriesByUserId(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -60,6 +60,6 @@ func toDto(category *domain.Category) dto.CategoryDto {
 		Grade:         category.Grade,
 		CurrentAmount: category.CurrentAmount,
 		TargetAmount:  category.TargetAmount,
-		UserId:        10,
+		UserId:        category.UserId,
 	}
 }
