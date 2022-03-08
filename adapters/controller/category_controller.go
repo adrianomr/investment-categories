@@ -41,6 +41,7 @@ func toDto(category *domain.Category) dto.CategoryDto {
 
 func (controller *CategoryControllerImpl) toDomain(categoryDto *dto.CategoryDto) *domain.Category {
 	return &domain.Category{
+		ID:            categoryDto.ID,
 		Name:          categoryDto.Name,
 		Grade:         categoryDto.Grade,
 		CurrentAmount: categoryDto.CurrentAmount,
@@ -59,7 +60,7 @@ func (controller *CategoryControllerImpl) FindAllCategories(userId int) (*[]dto.
 }
 
 func toDtoList(categories *[]domain.Category) []dto.CategoryDto {
-	var categoriesDto []dto.CategoryDto
+	categoriesDto := []dto.CategoryDto{}
 	for _, category := range *categories {
 		categoriesDto = append(categoriesDto, toDto(&category))
 	}

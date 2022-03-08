@@ -2,9 +2,9 @@ package sql
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 
 	"adrianorodrigues.com.br/investment-categories/framework/data/sql/dto"
-	"github.com/jinzhu/gorm"
 )
 
 type CategoryRepository interface {
@@ -14,15 +14,27 @@ type CategoryRepository interface {
 }
 
 type CategoryRepositoryImpl struct {
-	Db *gorm.DB
+	database Database
 }
 
 func NewCategoryRepository() CategoryRepository {
-	return &CategoryRepositoryImpl{Db: DatabaseSingleton().GetDb()}
+	return &CategoryRepositoryImpl{database: *DatabaseSingleton()}
 }
 
 func (repo *CategoryRepositoryImpl) Save(category *dto.CategoryDto) (*dto.CategoryDto, error) {
-	err := repo.Db.Create(category).Error
+	db, err := repo.database.GetDb()
+	if err != nil {
+		return nil, err
+	}
+
+	if category.ID == "" {
+		newUuid, err := uuid.NewUUID()
+		if err != nil {
+			return nil, err
+		}
+		category.ID = newUuid.String()
+	}
+	err = db.Create(category).Error
 
 	if err != nil {
 		return nil, err
@@ -32,8 +44,13 @@ func (repo *CategoryRepositoryImpl) Save(category *dto.CategoryDto) (*dto.Catego
 }
 
 func (repo *CategoryRepositoryImpl) Find(id string) (*dto.CategoryDto, error) {
+	db, err := repo.database.GetDb()
+	if err != nil {
+		return nil, err
+	}
+
 	var category dto.CategoryDto
-	repo.Db.Preload("Category").First(&category, "id = ?", id)
+	db.Preload("Category").First(&category, "id = ?", id)
 
 	if category.ID == "" {
 		return nil, fmt.Errorf("job does not exists")
@@ -43,7 +60,12 @@ func (repo *CategoryRepositoryImpl) Find(id string) (*dto.CategoryDto, error) {
 }
 
 func (repo *CategoryRepositoryImpl) FindAllCategoriesByUserId(userId int) (*[]dto.CategoryDto, error) {
-	var categories []dto.CategoryDto
-	err := repo.Db.Preload("Category").Where("user_id = ?", userId).Find(&categories).Error
+	db, err := repo.database.GetDb()
+	if err != nil {
+		return nil, err
+	}
+
+	categories := []dto.CategoryDto{}
+	err = db.Preload("Category").Where("user_id = ?", userId).Find(&categories).Error
 	return &categories, err
 }

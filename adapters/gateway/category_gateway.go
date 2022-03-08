@@ -36,7 +36,7 @@ func (gateway *CategoryGatewayImpl) FindAllCategories(userId int) (*[]domain.Cat
 }
 
 func toDomainList(response []dto.CategoryDto) *[]domain.Category {
-	var categories []domain.Category
+	categories := []domain.Category{}
 	for _, categoryDto := range response {
 		categories = append(categories, *toDomain(&categoryDto))
 	}

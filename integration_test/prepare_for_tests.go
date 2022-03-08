@@ -1,6 +1,7 @@
 package integration
 
 import (
+	"adrianorodrigues.com.br/investment-categories/application"
 	"adrianorodrigues.com.br/investment-categories/framework/data/sql"
 	"log"
 )
@@ -16,10 +17,13 @@ func NewPrepareForTests() PrepareForTests {
 }
 
 func (PrepareForTestsImpl) Prepare() {
+	application.NewApplication().Start()
 	setUp()
 }
 
 func setUp() {
+
+	(*sql.DatabaseSingleton()).FlushInMemoryDb()
 
 	repository := sql.NewCategoryRepository()
 

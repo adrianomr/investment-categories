@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-var categoriesSingleton = &CategoriesControllerImpl{controller: controller.NewCategoryController()}
+var categoriesSingleton CategoriesController
 var jwtHandler = NewJwtHandler()
 
 type CategoriesController interface {
@@ -18,7 +18,10 @@ type CategoriesControllerImpl struct {
 	controller controller.CategoryController
 }
 
-func CategoriesControllerSingleton() *CategoriesControllerImpl {
+func CategoriesControllerSingleton() CategoriesController {
+	if categoriesSingleton == nil {
+		categoriesSingleton = &CategoriesControllerImpl{controller: controller.NewCategoryController()}
+	}
 	return categoriesSingleton
 }
 

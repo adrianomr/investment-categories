@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -24,8 +25,11 @@ func (JwtHandlerImpl) getUser(r *http.Request) (int, error) {
 		return 0, errors.New("userId not found")
 	}
 	payloadBase64 := strings.Split(authorization, ".")[1]
-	payload := make([]byte, base64.StdEncoding.DecodedLen(len(payloadBase64)))
-	base64.StdEncoding.Decode(payload, []byte(payloadBase64))
+	payload, err := base64.RawStdEncoding.DecodeString(payloadBase64)
+	if err != nil {
+		log.Print(err)
+		return 0, errors.New("invalid payload")
+	}
 	var data map[string]interface{}
 	json.Unmarshal(payload, &data)
 	if data == nil || data["userId"] == nil {

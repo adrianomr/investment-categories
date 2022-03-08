@@ -3,6 +3,7 @@ package integration_test
 import (
 	"adrianorodrigues.com.br/investment-categories/framework/entrypoint/rest"
 	"adrianorodrigues.com.br/investment-categories/framework/entrypoint/rest/dto"
+	integration "adrianorodrigues.com.br/investment-categories/integration_test"
 	"bytes"
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
@@ -10,6 +11,10 @@ import (
 	"net/http"
 	"testing"
 )
+
+func init() {
+	integration.NewPrepareForTests().Prepare()
+}
 
 func TestPostCategories(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/categories", bytes.NewBufferString(`{"name":"Test","grade":10,"currentAmount":5,"TargetAmount":15}`))
