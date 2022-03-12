@@ -100,9 +100,9 @@ func (d *DatabaseImpl) connect() (*gorm.DB, error) {
 	}
 
 	if d.AutoMigrateDb {
-		db.AutoMigrate(&dto.CategoryDto{}, &dto.Investment{})
+		db.AutoMigrate(&dto.CategoryDto{}, &dto.InvestmentDto{})
 		db.Model(dto.CategoryDto{}).AddForeignKey("category_id", "category (id)", "NOTHING", "NOTHING")
-		db.Model(dto.Investment{}).AddForeignKey("category_id", "category (id)", "NOTHING", "NOTHING")
+		db.Model(dto.InvestmentDto{}).AddForeignKey("category_id", "category (id)", "NOTHING", "NOTHING")
 	}
 
 	return db, nil

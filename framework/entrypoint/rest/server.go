@@ -36,7 +36,16 @@ func (h HttpServerImpl) buildRouter() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/categories", CategoriesControllerSingleton().GetCategory).Methods("GET")
 	router.HandleFunc("/categories", CategoriesControllerSingleton().PostCategory).Methods("POST")
+	router.HandleFunc("/categories/{id}", CategoriesControllerSingleton().PutCategory).Methods("PUT")
+	router.Use(commonMiddleware)
 	return router
+}
+
+func commonMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (h HttpServerImpl) InitTest(req *http.Request) *httptest.ResponseRecorder {
@@ -52,6 +61,7 @@ func sendResponse(w http.ResponseWriter, response dto.ResponseDto) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func readRequest(r *http.Request, bodyResult interface{}) {
-	json.NewDecoder(r.Body).Decode(&bodyResult)
+func readRequest(r *http.Request, bodyResult interface{}) error {
+	err := json.NewDecoder(r.Body).Decode(&bodyResult)
+	return err
 }

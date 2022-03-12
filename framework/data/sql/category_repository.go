@@ -34,7 +34,7 @@ func (repo *CategoryRepositoryImpl) Save(category *dto.CategoryDto) (*dto.Catego
 		}
 		category.ID = newUuid.String()
 	}
-	err = db.Create(category).Error
+	err = db.Save(category).Error
 
 	if err != nil {
 		return nil, err

@@ -1,6 +1,6 @@
 package dto
 
-type Investment struct {
+type InvestmentDto struct {
 	ID            string
 	Name          string
 	Grade         float32

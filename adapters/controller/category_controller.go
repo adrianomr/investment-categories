@@ -9,37 +9,77 @@ import (
 type CategoryController interface {
 	CreateCategory(category *dto.CategoryDto) (*dto.CategoryDto, error)
 	FindAllCategories(userId int) (*[]dto.CategoryDto, error)
+	UpdateCategory(category *dto.CategoryDto) (*dto.CategoryDto, error)
 }
 
 type CategoryControllerImpl struct {
-	createCategory          usecase.CreateCategorieUseCase
 	findAllCategoriesByUser usecase.FindAllCategoriesUseCase
+	createCategory          usecase.CreateCategorieUseCase
+	updateCategory          usecase.CreateCategorieUseCase
 }
 
 func NewCategoryController() *CategoryControllerImpl {
 
-	return &CategoryControllerImpl{createCategory: usecase.NewCreateCategory(), findAllCategoriesByUser: usecase.NewFindAllCategoriesUseCase()}
+	return &CategoryControllerImpl{createCategory: usecase.NewCreateCategory(), findAllCategoriesByUser: usecase.NewFindAllCategoriesUseCase(), updateCategory: usecase.NewUpdateCategoryUseCase()}
 }
 
 func (controller *CategoryControllerImpl) CreateCategory(categoryDto *dto.CategoryDto) (*dto.CategoryDto, error) {
-	category := controller.toDomain(categoryDto)
+	category := toCategory(categoryDto)
 	var err error
 	category, err = controller.createCategory.Execute(category)
 	response := toDto(category)
-	return &response, err
+	return response, err
 }
 
-func toDto(category *domain.Category) dto.CategoryDto {
-	return dto.CategoryDto{
+func (controller *CategoryControllerImpl) UpdateCategory(categoryDto *dto.CategoryDto) (*dto.CategoryDto, error) {
+	category := toCategory(categoryDto)
+	var err error
+	category, err = controller.updateCategory.Execute(category)
+	response := toDto(category)
+	return response, err
+}
+
+func toDto(category *domain.Category) *dto.CategoryDto {
+	if category == nil {
+		return nil
+	}
+	return &dto.CategoryDto{
 		ID:            category.ID,
 		Name:          category.Name,
 		Grade:         category.Grade,
 		CurrentAmount: category.CurrentAmount,
 		TargetAmount:  category.TargetAmount,
+		Investments:   toInvestmentDtos(category.Investments),
 	}
 }
 
-func (controller *CategoryControllerImpl) toDomain(categoryDto *dto.CategoryDto) *domain.Category {
+func toInvestmentDtos(investments []*domain.Investment) []*dto.InvestmentDto {
+	if investments == nil {
+		return nil
+	}
+	investmentDtos := []*dto.InvestmentDto{}
+	for _, investment := range investments {
+		investmentDtos = append(investmentDtos, toInvestmentDto(investment))
+	}
+	return investmentDtos
+}
+
+func toInvestmentDto(investment *domain.Investment) *dto.InvestmentDto {
+	return &dto.InvestmentDto{
+		ID:            investment.ID,
+		Name:          investment.Name,
+		Grade:         investment.Grade,
+		Origin:        investment.Origin,
+		CurrentAmount: investment.CurrentAmount,
+		TargetAmount:  investment.TargetAmount,
+		Category:      toDto(investment.Category),
+	}
+}
+
+func toCategory(categoryDto *dto.CategoryDto) *domain.Category {
+	if categoryDto == nil {
+		return nil
+	}
 	return &domain.Category{
 		ID:            categoryDto.ID,
 		Name:          categoryDto.Name,
@@ -47,6 +87,8 @@ func (controller *CategoryControllerImpl) toDomain(categoryDto *dto.CategoryDto)
 		CurrentAmount: categoryDto.CurrentAmount,
 		TargetAmount:  categoryDto.TargetAmount,
 		UserId:        categoryDto.UserId,
+		Category:      toCategory(categoryDto.Category),
+		Investments:   toInvestments(categoryDto.Investments),
 	}
 }
 
@@ -56,13 +98,13 @@ func (controller *CategoryControllerImpl) FindAllCategories(userId int) (*[]dto.
 		return nil, err
 	}
 	categoriesDto := toDtoList(categories)
-	return &categoriesDto, nil
+	return categoriesDto, nil
 }
 
-func toDtoList(categories *[]domain.Category) []dto.CategoryDto {
+func toDtoList(categories *[]domain.Category) *[]dto.CategoryDto {
 	categoriesDto := []dto.CategoryDto{}
 	for _, category := range *categories {
-		categoriesDto = append(categoriesDto, toDto(&category))
+		categoriesDto = append(categoriesDto, *toDto(&category))
 	}
-	return categoriesDto
+	return &categoriesDto
 }

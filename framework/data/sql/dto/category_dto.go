@@ -8,6 +8,6 @@ type CategoryDto struct {
 	TargetAmount  float32
 	UserId        int
 	CategoryId    string
-	Category      *CategoryDto  `sql:"ForeignKey:CategoryId"`
-	Investments   *[]Investment `sql:"ForeignKey:CategoryId"`
+	Category      *CategoryDto     `sql:"ForeignKey:CategoryId"`
+	Investments   []*InvestmentDto `sql:"ForeignKey:CategoryId"`
 }

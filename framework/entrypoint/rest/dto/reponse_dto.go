@@ -25,3 +25,7 @@ func BuildErrorResponse(data error) ResponseDto {
 func BuildResponseForbidden(data error) ResponseDto {
 	return ResponseDto{Code: http.StatusForbidden, Data: data.Error(), Timestamp: time.Now()}
 }
+
+func BuildResponseUnprocessableEntity(data error) ResponseDto {
+	return ResponseDto{Code: http.StatusUnprocessableEntity, Data: data.Error(), Timestamp: time.Now()}
+}
