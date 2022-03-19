@@ -1,10 +1,8 @@
-version: '3'
-
-services:
-
-  investment-categories:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    ports:
-      - "8080:8000"
+setup:
+  config:
+    APP_NAME: investment-categories
+build:
+  docker:
+    web: docker/Dockerfile
+  config:
+    NODE_ENV: production
