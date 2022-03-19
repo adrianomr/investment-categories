@@ -5,6 +5,11 @@
 
 heroku login
 
+First deploy
+heroku git:remote -a investment-categories
+
+git push heroku master
+
 ## Bibliography
 
 ### Clean Arch

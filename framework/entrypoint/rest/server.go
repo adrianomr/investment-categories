@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 )
 
 var singleton = HttpServerImpl{}
@@ -25,8 +26,12 @@ type HttpServerImpl struct {
 
 func (h HttpServerImpl) Init() {
 	router := h.buildRouter()
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("Please specify the HTTP port as environment variable, e.g. env PORT=8081 go run http-server.go")
+	}
 	h.server = &http.Server{
-		Addr:    ":8080",
+		Addr:    ":" + port,
 		Handler: router,
 	}
 	log.Fatal(h.server.ListenAndServe())
