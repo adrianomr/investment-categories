@@ -26,7 +26,7 @@ type HttpServerImpl struct {
 func (h HttpServerImpl) Init() {
 	router := h.buildRouter()
 	h.server = &http.Server{
-		Addr:    ":8000",
+		Addr:    ":8080",
 		Handler: router,
 	}
 	log.Fatal(h.server.ListenAndServe())
