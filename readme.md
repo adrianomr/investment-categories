@@ -1,6 +1,10 @@
 
 # investment-categories
 
+## Deploy
+
+heroku login
+
 ## Bibliography
 
 ### Clean Arch

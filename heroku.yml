@@ -3,6 +3,6 @@ setup:
     APP_NAME: investment-categories
 build:
   docker:
-    web: docker/Dockerfile
+    web: Dockerfile
   config:
     NODE_ENV: production
