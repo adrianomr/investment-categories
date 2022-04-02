@@ -11,7 +11,7 @@ var categoriesSingleton CategoriesController
 var jwtHandler = NewJwtHandler()
 
 type CategoriesController interface {
-	GetCategory(w http.ResponseWriter, r *http.Request)
+	GetCategories(w http.ResponseWriter, r *http.Request)
 	PostCategory(w http.ResponseWriter, r *http.Request)
 	PutCategory(w http.ResponseWriter, r *http.Request)
 }
@@ -27,7 +27,7 @@ func CategoriesControllerSingleton() CategoriesController {
 	return categoriesSingleton
 }
 
-func (rest *CategoriesControllerImpl) GetCategory(w http.ResponseWriter, r *http.Request) {
+func (rest *CategoriesControllerImpl) GetCategories(w http.ResponseWriter, r *http.Request) {
 	userId, err := jwtHandler.getUser(r)
 	if err != nil {
 		sendResponse(w, dto.BuildResponseForbidden(err))

@@ -24,15 +24,22 @@ func TestGetCategoriesShouldReturnCategories(t *testing.T) {
 	log.Default().Printf("Reponse: %v", response)
 	assert.Equal(t, 200, response.Code)
 
-	categories := make([]dto.CategoryDto, 0, 10)
+	wallet := dto.WalletDto{}
 	responseBody := dto.ResponseDto{
-		Data: &categories,
+		Data: &wallet,
 	}
 	categoriesExpected := &[]dto.CategoryDto{*integration.CategoryRest, *integration.CategoryRest2}
+	walletExpected := &dto.WalletDto{
+		TotalAmount:       110,
+		InvestedAmount:    100,
+		Balance:           10,
+		PercentageBalance: 10,
+		Categories:        categoriesExpected,
+	}
 	log.Default().Printf(response.Body.String())
 	json.Unmarshal(response.Body.Bytes(), &responseBody)
 	log.Default().Printf(responseBody.Timestamp.String())
-	assert.Equal(t, categoriesExpected, responseBody.Data)
+	assert.Equal(t, walletExpected, responseBody.Data)
 }
 
 func TestGetCategoriesWhenNoCategoryFoundShouldReturnEmptyList(t *testing.T) {
@@ -44,13 +51,20 @@ func TestGetCategoriesWhenNoCategoryFoundShouldReturnEmptyList(t *testing.T) {
 	log.Default().Printf("Reponse: %v", response)
 	assert.Equal(t, 200, response.Code)
 
-	categories := make([]dto.CategoryDto, 0, 10)
+	wallet := dto.WalletDto{}
 	responseBody := dto.ResponseDto{
-		Data: &categories,
+		Data: &wallet,
 	}
 	categoriesExpected := &[]dto.CategoryDto{}
+	walletExpected := &dto.WalletDto{
+		TotalAmount:       0,
+		InvestedAmount:    0,
+		Balance:           0,
+		PercentageBalance: 0,
+		Categories:        categoriesExpected,
+	}
 	log.Default().Printf(response.Body.String())
 	json.Unmarshal(response.Body.Bytes(), &responseBody)
 	log.Default().Printf(responseBody.Timestamp.String())
-	assert.Equal(t, categoriesExpected, responseBody.Data)
+	assert.Equal(t, walletExpected, responseBody.Data)
 }

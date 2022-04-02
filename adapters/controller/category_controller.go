@@ -8,7 +8,7 @@ import (
 
 type CategoryController interface {
 	CreateCategory(category *dto.CategoryDto) (*dto.CategoryDto, error)
-	FindAllCategories(userId int) (*[]dto.CategoryDto, error)
+	FindAllCategories(userId int) (*dto.WalletDto, error)
 	UpdateCategory(category *dto.CategoryDto) (*dto.CategoryDto, error)
 }
 
@@ -44,12 +44,13 @@ func toDto(category *domain.Category) *dto.CategoryDto {
 		return nil
 	}
 	return &dto.CategoryDto{
-		ID:            category.ID,
-		Name:          category.Name,
-		Grade:         category.Grade,
-		CurrentAmount: category.CurrentAmount,
-		TargetAmount:  category.TargetAmount,
-		Investments:   toInvestmentDtos(category.Investments),
+		ID:             category.ID,
+		Name:           category.Name,
+		Grade:          category.Grade,
+		CurrentAmount:  category.CurrentAmount,
+		TargetAmount:   category.TargetAmount,
+		InvestedAmount: category.InvestedAmount,
+		Investments:    toInvestmentDtos(category.Investments),
 	}
 }
 
@@ -81,24 +82,35 @@ func toCategory(categoryDto *dto.CategoryDto) *domain.Category {
 		return nil
 	}
 	return &domain.Category{
-		ID:            categoryDto.ID,
-		Name:          categoryDto.Name,
-		Grade:         categoryDto.Grade,
-		CurrentAmount: categoryDto.CurrentAmount,
-		TargetAmount:  categoryDto.TargetAmount,
-		UserId:        categoryDto.UserId,
-		Category:      toCategory(categoryDto.Category),
-		Investments:   toInvestments(categoryDto.Investments),
+		ID:             categoryDto.ID,
+		Name:           categoryDto.Name,
+		Grade:          categoryDto.Grade,
+		CurrentAmount:  categoryDto.CurrentAmount,
+		TargetAmount:   categoryDto.TargetAmount,
+		InvestedAmount: categoryDto.InvestedAmount,
+		UserId:         categoryDto.UserId,
+		Category:       toCategory(categoryDto.Category),
+		Investments:    toInvestments(categoryDto.Investments),
 	}
 }
 
-func (controller *CategoryControllerImpl) FindAllCategories(userId int) (*[]dto.CategoryDto, error) {
-	categories, err := controller.findAllCategoriesByUser.Execute(userId)
+func (controller *CategoryControllerImpl) FindAllCategories(userId int) (*dto.WalletDto, error) {
+	wallet, err := controller.findAllCategoriesByUser.Execute(userId)
 	if err != nil {
 		return nil, err
 	}
-	categoriesDto := toDtoList(categories)
+	categoriesDto := toWalletDto(wallet)
 	return categoriesDto, nil
+}
+
+func toWalletDto(wallet *domain.Wallet) *dto.WalletDto {
+	return &dto.WalletDto{
+		TotalAmount:       wallet.TotalAmount,
+		InvestedAmount:    wallet.InvestedAmount,
+		Balance:           wallet.Balance,
+		PercentageBalance: wallet.PercentageBalance,
+		Categories:        toDtoList(wallet.Categories),
+	}
 }
 
 func toDtoList(categories *[]domain.Category) *[]dto.CategoryDto {

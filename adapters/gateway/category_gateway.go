@@ -55,13 +55,15 @@ func toDomain(response *dto.CategoryDto) *domain.Category {
 		return nil
 	}
 	return &domain.Category{
-		ID:            response.ID,
-		Name:          response.Name,
-		Grade:         response.Grade,
-		CurrentAmount: response.CurrentAmount,
-		TargetAmount:  response.TargetAmount,
-		Category:      toDomain(response.Category),
-		Investments:   toInvestments(response.Investments),
+		ID:             response.ID,
+		Name:           response.Name,
+		Grade:          response.Grade,
+		CurrentAmount:  response.CurrentAmount,
+		TargetAmount:   response.TargetAmount,
+		InvestedAmount: response.InvestedAmount,
+		Balance:        response.CurrentAmount - response.InvestedAmount,
+		Category:       toDomain(response.Category),
+		Investments:    toInvestments(response.Investments),
 	}
 }
 
@@ -93,13 +95,14 @@ func toCategoryDto(category *domain.Category) *dto.CategoryDto {
 		return nil
 	}
 	return &dto.CategoryDto{
-		ID:            category.ID,
-		Name:          category.Name,
-		Grade:         category.Grade,
-		CurrentAmount: category.CurrentAmount,
-		TargetAmount:  category.TargetAmount,
-		UserId:        category.UserId,
-		Category:      toCategoryDto(category.Category),
-		Investments:   toInvestmentsDto(category.Investments),
+		ID:             category.ID,
+		Name:           category.Name,
+		Grade:          category.Grade,
+		CurrentAmount:  category.CurrentAmount,
+		TargetAmount:   category.TargetAmount,
+		InvestedAmount: category.InvestedAmount,
+		UserId:         category.UserId,
+		Category:       toCategoryDto(category.Category),
+		Investments:    toInvestmentsDto(category.Investments),
 	}
 }

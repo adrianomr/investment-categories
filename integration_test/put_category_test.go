@@ -14,7 +14,7 @@ import (
 
 func TestPutCategories(t *testing.T) {
 	integration.NewPrepareForTests().Prepare()
-	req, _ := http.NewRequest("PUT", "/categories/TEST", bytes.NewBufferString(`{"name":"Test","grade":10,"currentAmount":5,"targetAmount":15}`))
+	req, _ := http.NewRequest("PUT", "/categories/TEST", bytes.NewBufferString(`{"name":"Test","grade":10,"currentAmount":5,"targetAmount":15,"investedAmount":10}`))
 	req.Header.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8lSCknTnRANlJ0AVzCgO2yF838WYA7bLaAR7vAKnofo")
 	response := rest.HttpServerSingleton().InitTest(req)
 
@@ -25,11 +25,12 @@ func TestPutCategories(t *testing.T) {
 		Data: category,
 	}
 	categoryExpected := &dto.CategoryDto{
-		ID:            "TEST",
-		Name:          "Test",
-		Grade:         10,
-		CurrentAmount: 5,
-		TargetAmount:  15,
+		ID:             "TEST",
+		Name:           "Test",
+		Grade:          10,
+		CurrentAmount:  5,
+		TargetAmount:   15,
+		InvestedAmount: 10,
 	}
 	json.Unmarshal(response.Body.Bytes(), &responseBody)
 	assert.Equal(t, categoryExpected, responseBody.Data)

@@ -39,7 +39,7 @@ func (h HttpServerImpl) Init() {
 
 func (h HttpServerImpl) buildRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/categories", CategoriesControllerSingleton().GetCategory).Methods("GET")
+	router.HandleFunc("/categories", CategoriesControllerSingleton().GetCategories).Methods("GET")
 	router.HandleFunc("/categories", CategoriesControllerSingleton().PostCategory).Methods("POST")
 	router.HandleFunc("/categories/{id}", CategoriesControllerSingleton().PutCategory).Methods("PUT")
 	router.Use(commonMiddleware)

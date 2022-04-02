@@ -6,7 +6,7 @@ import (
 )
 
 type FindAllCategoriesUseCase interface {
-	Execute(int) (*[]domain.Category, error)
+	Execute(int) (*domain.Wallet, error)
 }
 
 type FindAllCategoriesUseCaseImpl struct {
@@ -20,9 +20,21 @@ func NewFindAllCategoriesUseCase() *FindAllCategoriesUseCaseImpl {
 	}
 }
 
-func (useCase *FindAllCategoriesUseCaseImpl) Execute(userId int) (*[]domain.Category, error) {
+func (useCase *FindAllCategoriesUseCaseImpl) Execute(userId int) (*domain.Wallet, error) {
 
 	response, err := useCase.gateway.FindAllCategories(userId)
+	if err != nil {
+		return nil, err
+	}
+	var wallet = &domain.Wallet{
+		TotalAmount:       0,
+		InvestedAmount:    0,
+		Balance:           0,
+		PercentageBalance: 0,
+		Categories:        response,
+	}
 
-	return response, err
+	wallet.Calculate()
+
+	return wallet, err
 }

@@ -17,7 +17,8 @@ func init() {
 }
 
 func TestPostCategories(t *testing.T) {
-	req, _ := http.NewRequest("POST", "/categories", bytes.NewBufferString(`{"name":"Test","grade":10,"currentAmount":5,"TargetAmount":15}`))
+	const postJson = `{"name":"Test","grade":10,"currentAmount":5,"targetAmount":15, "investedAmount": 10}`
+	req, _ := http.NewRequest("POST", "/categories", bytes.NewBufferString(postJson))
 	req.Header.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8lSCknTnRANlJ0AVzCgO2yF838WYA7bLaAR7vAKnofo")
 	response := rest.HttpServerSingleton().InitTest(req)
 
@@ -28,10 +29,11 @@ func TestPostCategories(t *testing.T) {
 		Data: category,
 	}
 	categoryExpected := &dto.CategoryDto{
-		Name:          "Test",
-		Grade:         10,
-		CurrentAmount: 5,
-		TargetAmount:  15,
+		Name:           "Test",
+		Grade:          10,
+		CurrentAmount:  5,
+		TargetAmount:   15,
+		InvestedAmount: 10,
 	}
 	json.Unmarshal(response.Body.Bytes(), &responseBody)
 	categoryExpected.ID = category.ID
