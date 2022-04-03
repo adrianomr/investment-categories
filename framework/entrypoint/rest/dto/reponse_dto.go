@@ -6,9 +6,9 @@ import (
 )
 
 type ResponseDto struct {
-	Code      int `json:"-"`
-	Data      interface{}
-	Timestamp time.Time
+	Code      int         `json:"-"`
+	Data      interface{} `json:"data"`
+	Timestamp time.Time   `json:"timestamp"`
 }
 
 func BuildResponse(data interface{}, err error) ResponseDto {
