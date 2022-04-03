@@ -13,6 +13,8 @@ func (wallet *Wallet) Calculate() {
 		wallet.TotalAmount += category.CurrentAmount
 		wallet.InvestedAmount += category.InvestedAmount
 		wallet.Balance += category.Balance
-		wallet.PercentageBalance = ((wallet.TotalAmount - wallet.InvestedAmount) / wallet.InvestedAmount) * 100
+		if wallet.Balance > 0 && wallet.InvestedAmount > 0 {
+			wallet.PercentageBalance = (wallet.Balance / wallet.InvestedAmount) * 100
+		}
 	}
 }

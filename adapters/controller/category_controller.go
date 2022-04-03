@@ -39,6 +39,15 @@ func (controller *CategoryControllerImpl) UpdateCategory(categoryDto *dto.Catego
 	return response, err
 }
 
+func (controller *CategoryControllerImpl) FindAllCategories(userId int) (*dto.WalletDto, error) {
+	wallet, err := controller.findAllCategoriesByUser.Execute(userId)
+	if err != nil {
+		return nil, err
+	}
+	categoriesDto := toWalletDto(wallet)
+	return categoriesDto, nil
+}
+
 func toDto(category *domain.Category) *dto.CategoryDto {
 	if category == nil {
 		return nil
@@ -92,15 +101,6 @@ func toCategory(categoryDto *dto.CategoryDto) *domain.Category {
 		Category:       toCategory(categoryDto.Category),
 		Investments:    toInvestments(categoryDto.Investments),
 	}
-}
-
-func (controller *CategoryControllerImpl) FindAllCategories(userId int) (*dto.WalletDto, error) {
-	wallet, err := controller.findAllCategoriesByUser.Execute(userId)
-	if err != nil {
-		return nil, err
-	}
-	categoriesDto := toWalletDto(wallet)
-	return categoriesDto, nil
 }
 
 func toWalletDto(wallet *domain.Wallet) *dto.WalletDto {
