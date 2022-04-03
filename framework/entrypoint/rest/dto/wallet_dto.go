@@ -5,5 +5,5 @@ type WalletDto struct {
 	InvestedAmount    float32        `json:"investedAmount"`
 	Balance           float32        `json:"balance"`
 	PercentageBalance float32        `json:"percentageBalance"`
-	Categories        *[]CategoryDto `json:"category"`
+	Categories        *[]CategoryDto `json:"categories"`
 }
