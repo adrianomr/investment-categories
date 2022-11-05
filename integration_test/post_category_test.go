@@ -13,11 +13,8 @@ import (
 	"testing"
 )
 
-func init() {
-	integration.NewPrepareForTests().Prepare()
-}
-
 func TestPostCategories(t *testing.T) {
+	integration.NewPrepareForTests().Prepare()
 	response := postCategory(t, `{"name":"Test","grade":10,"currentAmount":5,"investedAmount": 10}`)
 	category := &dto.CategoryDto{}
 	responseBody := dto.ResponseDto{
@@ -36,6 +33,7 @@ func TestPostCategories(t *testing.T) {
 }
 
 func TestPostCategoriesWhenMultipleCategoriesShouldCalculateTargetValue(t *testing.T) {
+	integration.NewPrepareForTests().Prepare()
 	postCategory(t, `{"name":"Test","grade":10,"currentAmount":5,"investedAmount": 10}`)
 	response := postCategory(t, `{"name":"Test","grade":5,"currentAmount":5,"investedAmount": 10}`)
 	category := &dto.CategoryDto{}
