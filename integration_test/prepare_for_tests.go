@@ -4,6 +4,7 @@ import (
 	"adrianorodrigues.com.br/investment-categories/application"
 	"adrianorodrigues.com.br/investment-categories/framework/data/sql"
 	"log"
+	"os"
 )
 
 type PrepareForTests interface {
@@ -17,6 +18,7 @@ func NewPrepareForTests() PrepareForTests {
 }
 
 func (PrepareForTestsImpl) Prepare() {
+	os.Setenv("profile", "test")
 	application.NewApplication().Start()
 	setUp()
 }

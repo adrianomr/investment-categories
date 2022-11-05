@@ -1,8 +1,8 @@
 package sql_test
 
 import (
-	"adrianorodrigues.com.br/investment-categories/application"
 	"adrianorodrigues.com.br/investment-categories/framework/data/sql"
+	integration "adrianorodrigues.com.br/investment-categories/integration_test"
 	"log"
 	"testing"
 
@@ -31,7 +31,7 @@ var category2 = &dto.CategoryDto{
 var repository = setUp()
 
 func setUp() sql.CategoryRepository {
-	application.NewApplication().Start()
+	integration.NewPrepareForTests().Prepare()
 	repository := sql.NewCategoryRepository()
 
 	_, err := repository.Save(category)

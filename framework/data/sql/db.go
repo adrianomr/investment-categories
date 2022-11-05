@@ -2,6 +2,7 @@ package sql
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -40,7 +41,15 @@ func configDb() {
 	debugMode, err := strconv.ParseBool(os.Getenv("database.debug"))
 	dns := os.Getenv("database.dsn")
 	if dns == "" {
-		panic(errors.New("No database found"))
+		dbname := os.Getenv("database.name")
+		sslmode := os.Getenv("database.sslmode")
+		user := os.Getenv("database.user")
+		password := os.Getenv("database.password")
+		host := os.Getenv("database.host")
+		dns = fmt.Sprintf("dbname=%v sslmode=%v user=%v password=%v host=%v", dbname, sslmode, user, password, host)
+		if host == "" {
+			panic(errors.New("No database found"))
+		}
 	}
 	if err != nil {
 		log.Printf("Using default debug mode")
