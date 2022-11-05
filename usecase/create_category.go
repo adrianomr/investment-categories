@@ -21,7 +21,11 @@ func NewCreateCategory() *CreateCategorieUseCaseImpl {
 }
 
 func (useCase *CreateCategorieUseCaseImpl) Execute(category *domain.Category) (*domain.Category, error) {
-
+	categories, err := useCase.gateway.FindAllCategories(category.UserId)
+	if err != nil {
+		return nil, err
+	}
+	category.CalculateTarget(categories)
 	response, err := useCase.gateway.CreateCategory(category)
 
 	return response, err

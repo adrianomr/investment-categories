@@ -12,3 +12,15 @@ type Category struct {
 	Investments    []*Investment
 	UserId         int
 }
+
+func (c *Category) CalculateTarget(categories *[]Category) {
+	totalAmount := c.CurrentAmount
+	sumGrade := c.Grade
+	for _, category := range *categories {
+		if c.ID != category.ID {
+			totalAmount += category.CurrentAmount
+			sumGrade += category.Grade
+		}
+	}
+	c.TargetAmount = (c.Grade / sumGrade) * totalAmount
+}
